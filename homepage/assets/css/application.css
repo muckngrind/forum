@@ -1,0 +1,40 @@
+/*!
+ * Application Styles
+ *
+ * Written by Ryan
+ */
+
+.new-mail {
+  font-weight: bold;
+}
+
+.read-mail {
+  font-weight: lighter;
+}
+
+.address {
+	width: 30%;
+}
+
+.subject {
+	width: 60%;
+}
+
+.date {
+	width: 10%;
+}
+
+h2.club-search {
+	display: block;
+  padding: 3px 15px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 18px;
+  color: #999999;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.admin-label {
+	color: #49afcd;
+}

@@ -1,3 +1,5 @@
 Views have been completed
 Sign up, sign in and sign out are completed
 TODO: Need to work on proper redirect to user home page after sign in
+TODO: Need to display username rather than user id when reading mail
+TODO: Build the forum!!!

@@ -1,7 +1,6 @@
 <?php
 	require_once(dirname(__FILE__).'/../views/_page_elements.html.php');
 	function _index($content="") {
-		echo $content['error'];
 ?>
     <!--container-->
     <div class="container-fluid">

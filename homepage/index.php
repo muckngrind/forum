@@ -3,9 +3,9 @@ require_once(dirname(__FILE__).'/../config/before.php');
 require_once(dirname(__FILE__).'/../views/_index.html.php');
 require_once(dirname(__FILE__).'/../config/after.php');
 	session_start();
-	if ( is_logged_in() ) {
-		# If user is logged in, send to user home page
-		header("location: home.php");
+	if ( is_signed_in() ) {
+		# If user is signed in, send to user home page
+		header("location: home.php?request=Inbox");
 	} else {
 		# Log in attempt made
 		if ( isset( $_POST['username'], $_POST['password'] ) ) {

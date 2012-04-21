@@ -5,6 +5,10 @@
 
 require_once('config.php');
 
+	##################################
+	#         User Functions         #
+	##################################
+	
 	# Create new database object
 	function db_conn() {
 		$conn = new mysqli(HOST, USER, PASSWORD, DATABASE);
@@ -62,7 +66,7 @@ require_once('config.php');
 	}
 
 	# Is user logged in?
-	function is_logged_in() {
+	function is_signed_in() {
 		if ( $_SESSION['username'] ) {
 			return true;
 		} else {
@@ -101,7 +105,111 @@ require_once('config.php');
 			$message = "Invalid user name: May contain a-zA-Z0-9._- and must be between 5 and 25 characters length.";
 		}
 	}
+	
+	##################################
+	#     Mail Message Functions     #
+	##################################
+	
+	# Request email results from db
+	function get_mail($mailbox) {
+		
+		# Select requested mailbox
+		switch ($mailbox) {
+			case 'Inbox':
+				$query = "select id, sender_id, subject, created_at, recipient_read from messages where recipient_id=(select id from users where username='".$_SESSION['username']."');";
+				break;
+			case 'Sent':
+				$query = "select id, recipient_id, subject, created_at, recipient_read from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_sent=1;";
+				break;
+			case 'Trash':
+				$query = "select id, recipient_id, sender_id, subject, created_at, recipient_read from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_deleted=1;";
+				break;
+		}
+		
+		# Query database for mail
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Problem retrieving mail. Please try again later.");	
+		}
+		
+		if ( $result->num_rows < 1 ) {
+			$conn->close();
+			return false;
+		} else {
+			$conn->close();
+			return $result;
+		}
+	}
 
+	# Send mail
+	function send_message($message) {
+		# Gather user id's
+		$conn = db_conn();
+		$query = "select id from users where username='".$message['from']."';";
+		$from_result = $conn->query($query);
+		$row = $from_result->fetch_assoc();
+		$from = $row['id'];
+		$query = "select id from users where username='".$message['to']."';";
+		$to_result = $conn->query($query);
+		$row = $to_result->fetch_assoc();
+		$to = $row['id'];
+		
+		$query = "insert into messages (sender_id, recipient_id, subject, content, sender_sent) values ('".$from."', '".$to."', '".$message['subject']."', '".$message['content']."', 1);";
+
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Problem sending mail. Please try again later.");	
+		}
+		
+		if ( $result->affected_rows < 1 ) {
+			$conn->close();
+			return false;
+		} else {
+			$conn->close();
+			return true;
+		}
+	}
+	
+	# Retrieve message
+	function get_message($id) {
+		# Request message from db
+		$query = "select id, sender_id, recipient_id, subject, content, created_at from messages where id=$id";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Problem retrieving message. Please try again later.");	
+		}
+		if ( $result->num_rows < 1 ) {
+			$conn->close();
+			return false;
+		} else {
+			$conn->close();
+			return $result;
+		}
+	}
+	
+	# Delete message from db
+	function delete_message($id) {
+		$query = "delete from messages where id=$id";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		
+		if ( !$result ) {
+			$conn-close();
+			throw new Exeception("Problem deleting message.  Please try again later.");
+		}
+		
+		if ( $result->affected_rows > 0 ) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
 #Should auto include all required files but I have not gotten it to work correctly yet
 #echo $conn->host_info . " from before.php<br/>";
 #$test_val = "TEST";

@@ -17,11 +17,11 @@
 }
 
 .subject {
-	width: 60%;
+	width: 50%;
 }
 
 .date {
-	width: 10%;
+	width: 20%;
 }
 
 h2.club-search {
@@ -37,4 +37,13 @@ h2.club-search {
 
 .admin-label {
 	color: #49afcd;
+}
+
+div span.read {
+	line-height: 3em;
+}
+
+div span.read-title {
+	line-height: 3em;
+	border-bottom: #333 1px dotted;
 }

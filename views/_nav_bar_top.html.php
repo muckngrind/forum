@@ -19,8 +19,8 @@
             </ul>
             <p class="navbar-text pull-right">
 						<?php 
-							if ( is_logged_in() ) {
-								echo "Logged in as <a href=\"home.php\">".$_SESSION['username']."</a> ";
+							if ( is_signed_in() ) {
+								echo "Signed in as <a href=\"home.php\">".$_SESSION['username']."</a> ";
 								echo "| <a href=\"log_out.php\">sign out</a>";
               } else {
               	echo "<a href=\"index.php\">Sign in</a>";

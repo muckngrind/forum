@@ -1,22 +1,24 @@
 <?php
 require_once(dirname(__FILE__).'/../config/before.php');
-require_once(dirname(__FILE__).'/../views/_home.html.php');
+require_once(dirname(__FILE__).'/../views/_send_mail.html.php');
 require_once(dirname(__FILE__).'/../config/after.php');
 
 session_start();
 # If user is signed in
 if ( is_signed_in() ) {
 	# Gather parameters and display requested resources
-	$content['request'] = trim($_GET['request']);
-	$content['heading'] = $content['request'];
+	$content['heading'] = "Mail Sent";
+	$content['to'] = trim($_POST['to']);
+	$content['from'] = trim($_POST['from']);
+	$content['subject'] = trim($_POST['subject']);
+	$content['content'] = trim($_POST['content']);
+	
 	try {
-		# Retrieve email for requested mailbox or compose form
-		if ( !strcmp($content['request'], "Compose") == 0 ) {
-			$content['mail'] = get_mail($content['request']);
-		}
+		# Send mail
+		send_message($content);
 		_header();
 		_nav_bar_top();
-		_home($content);
+		_send_mail($content);
 		_footer();
 	} catch (Exception $e) {
 		$content['error'] = $e;

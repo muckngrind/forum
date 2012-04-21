@@ -1,6 +1,6 @@
 <?php
 	require_once(dirname(__FILE__).'/../views/_page_elements.html.php');
-	function _home($content) {
+	function _send_mail($content) {
 ?>
     <!--container-->
     <div class="container-fluid">
@@ -17,7 +17,8 @@
               </div><!--/row-->
               <div class="row-fluid">
               	<!--content-pane-->
-									<?php _mailbox($content['mail'], $content['request']); ?>
+									<p>Your email was successfully sent.</p>
+                  <a class="btn btn-info" href="home.php?request=Inbox">Return to Inbox</a>
                 <!--/content-pane-->
               </div><!--/row-->
             </div><!--/span-->

@@ -6,9 +6,10 @@
               <div class="well sidebar-nav">
                 <ul class="nav nav-list">
                   <li class="nav-header">Mailbox</li>
-                  <li class="active"><a href="#">Inbox</a></li>
-                  <li><a href="#">Sent</a></li>
-                  <li><a href="#">Trash</a></li>
+                  <li><a href="home.php?request=Compose">Compose</a></li>
+                  <li class="active"><a href="home.php?request=Inbox">Inbox</a></li>
+                  <li><a href="home.php?request=Sent">Sent</a></li>
+                  <li><a href="home.php?request=Trash">Trash</a></li>
                   <li class="nav-header">My Clubs</li>
                   <li><a href="#">Link</a></li>
                   <li><a href="#">Link</a></li>

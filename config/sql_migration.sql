@@ -5,7 +5,8 @@ CREATE TABLE clubs (
   id int(10) unsigned NOT NULL auto_increment,
   name varchar(64) NOT NULL default '',
   description tinytext NOT NULL,
-  admin int(10) unsigned default ‘0’,
+	type varchar(10) NOT NULL default 'private',
+  admin int(10) unsigned default 0,
  PRIMARY KEY  (id),
 CONSTRAINT clubs_fk_1  FOREIGN KEY (admin) REFERENCES users (id) 	
  	 ON DELETE CASCADE 
@@ -28,6 +29,7 @@ CREATE TABLE forums (
   club_id int(10) unsigned NOT NULL,
   name varchar(64) NOT NULL default '',
   description tinytext NOT NULL,
+  type tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY club_id (club_id),
   CONSTRAINT forums_fk_1 FOREIGN KEY (club_id) REFERENCES clubs (id) ON UPDATE CASCADE ON DELETE CASCADE 
@@ -94,14 +96,15 @@ CREATE TABLE users (
 insert into users values (null, 'tester', 'testing', 'Chester Tester', 0, 1);
 insert into users values (null, 'debug', 'testing', 'Lady Debug', 0, 0);
 insert into users values (null, 'test_anxiety', 'testing', 'Mr. Testanxious', 0, 0);
+insert into user values (null, 'clubn', 'testing', 'Club Admin', 0, 0);
 
 # Clubs
-INSERT INTO 'clubs' VALUES (NULL, 'Club 1', 'Club 1 is the first',);
-INSERT INTO 'clubs' VALUES (NULL, 'Club 2', 'Club 2 is after Club 1');
+insert into clubs values (null, 'Flower Club', 'Come and stop to smell the roses!', 'private', 4);
+insert into clubs values (null, 'Math Club', 'Join us for some PI', 'private', 3); 
 
 # Forums
-INSERT INTO 'forums' VALUES (NULL, '1', 'Test Forum 1', 'Testing Test Forum 1');
-INSERT INTO 'forums' VALUES (NULL, '2', 'Test Forum 2', 'Testing Test Forum 2');
+ insert into forums values (null, 1, 'Test Forum 1', 'Testing Test Forum 1', 1);
+ insert into forums values (null, 2, 'Test Forum 2', 'Testing Test Forum 2', 0);
 
 # Threads
 INSERT INTO 'threads' VALUES (NULL, '1', NULL, 'ROOT Thread 1', 'Thread Root', '1', NULL); # Root

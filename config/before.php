@@ -87,6 +87,19 @@ require_once('config.php');
 		}
 	}
 	
+	# Get user id
+	function get_user_id($username) {
+		$conn = db_conn();
+		$query = "select id from users where username='$username'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not identify user.");
+		} else {
+			return true;
+		}
+	}
+	
 	# Select a new random temporary password
 	function get_temp_password() {
 		$dictionary = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+";
@@ -210,6 +223,127 @@ require_once('config.php');
 			return false;
 		}		
 	}
+	
+	
+	##################################
+	#    Administrator Functions     #
+	##################################
+	
+	# Check to see if user is admin
+	function is_admin() {
+		
+	}
+	
+	function create_club($params) {
+		# Get id for administrator
+		$id = get_user_id($params['club_administrator']);
+		$query = "insert into clubs values (null, '".$params['club_name']."', '".$params['club_description']."', '".$params['club_type']."', '".$id."');";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not create a new club at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}
+	
+	function appoint_club_administrator($params) {
+		# Get id for administrator
+		$id = get_user_id($params['club_administrator']);
+		$query = "update clubs set admin='$id' where name='".$params['club_name']."'";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not update club admin at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}
+	
+	function ban_user($params) {
+		$query = "update users set banned='1' where username='".$params['username']."'";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not ban user at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}	
+	
+	function edit_club_profile($params) {
+		$query = "update clubs set description='".$params['club_description']."', type='".$params['club_type']."' where name='".$params['club_name']."';";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not update the club profile at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}	
+
+	# Get club id
+	function get_club_id($name) {
+		$conn = db_conn();
+		$query = "select id from clubs where name='$name'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not identify club.");
+		} else {
+			$conn->close();
+			return true;
+		}
+	}
+
+	function get_club_list($username) {
+		# Get user id to search for clubs for which user is admin
+		$id = get_user_id($username);
+		echo "$id";
+		$conn = db_conn();
+		$query = "select id, name from clubs where admin='$id'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We retrieve club list at this time. Please try again later.");
+		}
+		$conn->close();
+		if ( $result->num_rows > 0 ) {
+			return $result;
+		} else {
+			return false;
+		}
+	}
+	
+	function add_forum($params) {
+		$query = "insert into forums values (null, '".$params['club_id']."', '".$params['forum_name']."', '".$params['forum_description']."', 0)";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not create a new forum at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}	
+	
+	function close_forum($params) {
+		$query = "update forums set type=1 where name='".$params['forum_name']."'";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not close forum at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}		
+	
+	
 #Should auto include all required files but I have not gotten it to work correctly yet
 #echo $conn->host_info . " from before.php<br/>";
 #$test_val = "TEST";

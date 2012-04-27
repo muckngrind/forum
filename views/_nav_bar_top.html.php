@@ -10,17 +10,23 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Discussion</a>
+          <a class="brand" href="index.php">Discussion</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+            <?php
+							if ( is_signed_in() ) {
+								echo "<li><a href=\"home.php?request=Inbox\">Home</a></li>";
+							}
+							if ( is_super_user() ) {
+								echo "<li><a href=\"admin.php\">Control Panel</a></li>";
+							}
+						?>
+              <li><a href="about.php">About</a></li>
             </ul>
             <p class="navbar-text pull-right">
 						<?php 
 							if ( is_signed_in() ) {
-								echo "Signed in as <a href=\"home.php\">".$_SESSION['username']."</a> ";
+								echo "Signed in as <a href=\"user.php\">".$_SESSION['username']."</a> ";
 								echo "| <a href=\"log_out.php\">sign out</a>";
               } else {
               	echo "<a href=\"index.php\">Sign in</a>";

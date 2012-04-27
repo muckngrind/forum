@@ -10,5 +10,6 @@ require_once(dirname(__FILE__).'/../views/_forum.html.php');
 require_once(dirname(__FILE__).'/../views/_admin.html.php');
 require_once(dirname(__FILE__).'/../views/_send_mail.html.php');
 require_once(dirname(__FILE__).'/../views/_read_mail.html.php');
+require_once(dirname(__FILE__).'/../views/_about.html.php');
 require_once(dirname(__FILE__).'/../views/_javascript_footer.html.php');
 ?>

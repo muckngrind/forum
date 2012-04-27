@@ -22,21 +22,25 @@
                     <li class="span3">
                       <div class="thumbnail">
                         <img src="http://placehold.it/260x180" alt="">
-                        <h5>Est. Date</h5>
                       </div>
                     </li>
                   </ul>
                 </div><!--/span-->
                 <div class="span5">
                   <div class="well-small">
-                    <h3><?php echo $content['club']; ?></h3>
-                    <p><?php echo $content['description']; ?></p>
+                    <h3>Club Name: <?php echo $content['club_name']; ?></h3>
+                    <h4>Type: <?php echo $content['club_type']; ?></h4>
+                    <p><strong>Description:</strong> <?php echo $content['club_description']; ?></p>
                   </div>
                 </div><!--/span-->
                 <!--/content-pane-->
               </div><!--/row-->
               <div class="row-fluid">
               	<!--content-pane-->
+							<?php
+                if ( ( strcmp($content['club_type'],"private") == 0 ) &&
+                    ( !is_club_member($_SESSION['username'], $content['club_id']) ) ) {
+                  ?>
                 	<h4>Club Membership</h4>
                   <p>You are currently not a member of this club.</p>
                   <p>
@@ -48,7 +52,23 @@
                     <input type="text" name="message" placeholder="Message: I would like to join!">
                     <button type="submit" class="btn btn-info">Send membership request</button>
                   </form>
-                  </p>
+                  </p>                      
+									<?php
+                }
+                ?>
+                <h4><?php echo $content['club_name']; ?> Forums</h4>
+                <div class="well">
+                <?php
+								$result = get_club_forums($content['club_id']);
+								if ( $result ) {
+									while ( $row = $result->fetch_assoc() ) {
+										echo "<li><strong>".$row['name']."</strong> - ".$row['description']."</li>";
+									}
+								} else {
+									echo "No active forums are available at this time.";
+								}
+								?>
+                </div>
                 <!--/content-pane-->
               </div><!--/row-->
             </div><!--/span-->

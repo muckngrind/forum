@@ -83,16 +83,18 @@
 												echo "</tbody>\n</table>\n";          
 											} else {
 												?>
+                        <div class="well">
 												<form action="send_mail.php?request=Inbox" method="post" name="compose" id="compose">
 													<label>Recipient</label>
-													<input type="text" name="to"><br/>
+													<input class="span7" type="text" name="to"><br/>
 													<label>Subject</label>
-													<input type="text" name="subject"><br/>
+													<input class="span7" type="text" name="subject"><br/>
                           <label>Message</label>																							
-                          <textarea name="content" id="content"></textarea><br/>
+                          <textarea class="span7" name="content" id="content"></textarea><br/>
                           <input type="hidden" name="from" value="<?php echo $_SESSION['username']?>" />
                           <input class="btn btn-info" type="submit" value="Send" />
 												</form>
+                        </div>
                         <br />
                         <?php
 											}

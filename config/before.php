@@ -100,6 +100,20 @@ require_once('config.php');
 		}
 	}
 	
+	# Get user name
+	function get_user_name($username) {
+		$conn = db_conn();
+		$query = "select full_name from users where username='$username'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+				$conn->close();
+				throw new Exception("Could not identify user.");
+		} else {
+			$row = $result->fetch_assoc();
+			return $row['full_name'];
+		}
+	}
+	
 	# Select a new random temporary password
 	function get_temp_password() {
 		$dictionary = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+";
@@ -116,6 +130,30 @@ require_once('config.php');
 		# Match patterns
 		if (!preg_match($pattern_username, $username)) {
 			$message = "Invalid user name: May contain a-zA-Z0-9._- and must be between 5 and 25 characters length.";
+		}
+	}
+	
+	# Check to see if this user is an administrator of some kind
+	function is_super_user() {
+		return true;
+	}
+	
+	# Get list of clubs for which user is a member
+	function user_clubs() {
+		$conn = db_conn();
+		$username = $_SESSION['username'];
+		$query = "select id, name from clubs a inner join clubs_users b on a.id = b.club_id where b.user_id = (select users.id from users where users.username = '$username');";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve club listing.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows == 0 ) {
+				return false;
+			} else {
+				return $result;
+			}
 		}
 	}
 	
@@ -342,8 +380,61 @@ require_once('config.php');
 		$conn->close();
 		return true;
 	}		
+
+
+	##################################
+	#        Helper Functions        #
+	##################################
 	
+	# Retrive club info
+	function get_club_info($id) {
+		$conn = db_conn();
+		$query = "select * from clubs where id=$id";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve club info.");
+		} else {
+			$conn->close();
+			$row = $result->fetch_assoc();
+			return $row;
+		}
+	}
 	
+	# Is user a club member?
+	function is_club_member($username, $id) {
+		$conn = db_conn();
+		$query = "select user_id from clubs_users where user_id=(select id from users where username='$username') and club_id=$id";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could determine if user is a member of club.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows != 1 ) {
+				return false;
+			} else {
+				return true;
+			}
+		}		
+	}
+	
+	# Get a club's forums
+	function get_club_forums($id) {
+		$conn = db_conn();
+		$query = "select name, description, type from forums where club_id = $id";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve forum info.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows == 0 )
+				return false;
+			else
+				return $result;
+		}		
+	}
 #Should auto include all required files but I have not gotten it to work correctly yet
 #echo $conn->host_info . " from before.php<br/>";
 #$test_val = "TEST";

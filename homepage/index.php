@@ -32,10 +32,7 @@ require_once(dirname(__FILE__).'/../config/after.php');
 				if ( sign_in($username, $password) ) {
 					# Register user for session
 					$_SESSION['username'] = $username;
-					_header();
-					_nav_bar_top();
-					_index();
-					_footer();
+					header("location: home.php?request=Inbox");
 				}
 			} catch (Exception $e) {
 				$content['error'] = $e;

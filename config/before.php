@@ -51,15 +51,20 @@ require_once('config.php');
 	# Sign user in
 	function sign_in($username, $password) {
 		$conn = db_conn();
-		$result = $conn->query("select username from users where username='".$username."' and password_digest='".sha1($password)."'");
+		$result = $conn->query("select username, banned from users where username='".$username."' and password_digest='".sha1($password)."'");
 		if ( !$result ) {
 			$conn->close();
 			throw new Exception("Error while attempting to log in.  Please try again later.");	
 		}
 		
-		# If name is available, num_rows should equal zero
+		# Evaluate result
 		if ( $result->num_rows > 0 ) {
-			return true;
+			$row = $result->fetch_assoc();
+			if ( $row['banned'] == true) {
+				throw new Exception("Your account has been closed.");	
+			} else {
+				return true;
+			}
 		} else {
 			throw new Exception("User name or password mismatch.");
 		}		
@@ -96,7 +101,8 @@ require_once('config.php');
 			$conn->close();
 			throw new Exception("Could not identify user.");
 		} else {
-			return true;
+			$row = $result->fetch_assoc();
+			return $row['id'];
 		}
 	}
 	
@@ -134,8 +140,22 @@ require_once('config.php');
 	}
 	
 	# Check to see if this user is an administrator of some kind
-	function is_super_user() {
-		return true;
+	function is_an_admin() {
+		$conn = db_conn();
+		$username = $_SESSION['username'];
+		$query = "select admin from users where username='$username'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve admin credentials.");
+		} else {
+			$row = $result->fetch_assoc();
+			if ( $row['admin'] == true ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	# Get list of clubs for which user is a member
@@ -167,10 +187,10 @@ require_once('config.php');
 		# Select requested mailbox
 		switch ($mailbox) {
 			case 'Inbox':
-				$query = "select id, sender_id, subject, created_at, recipient_read from messages where recipient_id=(select id from users where username='".$_SESSION['username']."');";
+				$query = "select a.id, a.sender_id, a.subject, a.created_at, a.recipient_read, b.username as sender_name from messages a inner join users b on a.sender_id = b.id where recipient_id=(select id from users where username='".$_SESSION['username']."');";
 				break;
 			case 'Sent':
-				$query = "select id, recipient_id, subject, created_at, recipient_read from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_sent=1;";
+				$query = "select a.id, a.recipient_id, a.subject, a.created_at, a.recipient_read, b.username as recipient_name from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_sent=1;";
 				break;
 			case 'Trash':
 				$query = "select id, recipient_id, sender_id, subject, created_at, recipient_read from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_deleted=1;";
@@ -266,10 +286,23 @@ require_once('config.php');
 	##################################
 	#    Administrator Functions     #
 	##################################
-	
-	# Check to see if user is admin
+
 	function is_admin() {
-		
+		$conn = db_conn();
+		$username = $_SESSION['username'];
+		$query = "select admin from users where username='$username'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve admin credentials.");
+		} else {
+			$row = $result->fetch_assoc();
+			if ( $row['admin'] == true ) {
+				return true;
+			} else {
+				return false;
+			}
+		}		
 	}
 	
 	function create_club($params) {
@@ -327,14 +360,15 @@ require_once('config.php');
 	# Get club id
 	function get_club_id($name) {
 		$conn = db_conn();
-		$query = "select id from clubs where name='$name'";
+		$query = "select id from clubs where name='".$name."'";
 		$result = $conn->query($query);
 		if ( !$result ) {
 			$conn->close();
 			throw new Exception("Could not identify club.");
 		} else {
 			$conn->close();
-			return true;
+			$row = $result->fetch_assoc();
+			return $row['id'];
 		}
 	}
 
@@ -358,7 +392,7 @@ require_once('config.php');
 	}
 	
 	function add_forum($params) {
-		$query = "insert into forums values (null, '".$params['club_id']."', '".$params['forum_name']."', '".$params['forum_description']."', 0)";
+		$query = "insert into forums (club_id, name, description) values ('".$params['club_id']."', '".$params['forum_name']."', '".$params['forum_description']."')";
 		$conn = db_conn();
 		$result = $conn->query($query);
 		if ( !$result ) {
@@ -369,18 +403,6 @@ require_once('config.php');
 		return true;
 	}	
 	
-	function close_forum($params) {
-		$query = "update forums set type=1 where name='".$params['forum_name']."'";
-		$conn = db_conn();
-		$result = $conn->query($query);
-		if ( !$result ) {
-			$conn->close();
-			throw new Exception("We can not close forum at this time. Please try again later.");
-		}
-		$conn->close();
-		return true;
-	}		
-
 
 	##################################
 	#        Helper Functions        #
@@ -419,10 +441,46 @@ require_once('config.php');
 		}		
 	}
 	
+	# Is user a forum moderator?
+	function is_moderator($forum_id, $user_id) {
+		$conn = db_conn();
+		$query = "select * from forums_moderators where forum_id='".$forum_id."' and user_id='".$user_id."'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could determine if user is a forum moderator.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows != 1 ) {
+				return false;
+			} else {
+				return true;
+			}
+		}		
+	}	
+	
+	# Is user a club administrator?
+	function is_club_admin($club_id, $user_id) {
+		$conn = db_conn();
+		$query = "select a.admin, b.id from clubs a inner join users b on a.admin=b.id where b.id=$user_id and a.id=$club_id";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could determine if user is a club administrator.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows != 1 ) {
+				return false;
+			} else {
+				return true;
+			}
+		}		
+	}		
+	
 	# Get a club's forums
 	function get_club_forums($id) {
 		$conn = db_conn();
-		$query = "select name, description, type from forums where club_id = $id";
+		$query = "select id, name, description, type from forums where club_id = $id";
 		$result = $conn->query($query);
 		if ( !$result ) {
 			$conn->close();
@@ -435,11 +493,98 @@ require_once('config.php');
 				return $result;
 		}		
 	}
-#Should auto include all required files but I have not gotten it to work correctly yet
-#echo $conn->host_info . " from before.php<br/>";
-#$test_val = "TEST";
-# Require all of our classes
-#foreach ($cnf['requires'] as $glob_me)
-#  foreach (glob($glob_me) as $path)
-#    require_once($path);
+
+# Get a forum's info
+	function get_forum($id) {
+		$conn = db_conn();
+		$query = "select a.name as club_name, b.name as forum_name, b.description as forum_description, b.type as forum_type, b.is_open as is_open from clubs a inner join forums b on a.id=b.club_id where b.id=$id";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve forum info.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows == 0 )
+				return false;
+			else
+				return $result;
+		}		
+	}	
+	
+# Get threads
+	function get_threads($forum_id) {
+		$conn = db_conn();
+		$query = "select a.id, a.subject, a.content, a.created_at, b.username from threads a inner join users b on a.user_id = b.id where a.forum_id = $forum_id order by a.created_at desc";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not retrieve thread info.");
+		} else {
+			$conn->close();
+			if ( $result->num_rows == 0 )
+				return false;
+			else
+				return $result;
+		}		
+	}
+
+# Create threads
+	function create_thread($params) {
+		$conn = db_conn();
+		$query = "insert into threads (forum_id, subject, content, user_id) values ('".$params['forum_id']."', '".$params['subject']."', '".$params['content']."', '".$params['user_id']."')";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Error: Could not save your thread at this time.");
+		} else {
+			return true;
+		}
+	}
+
+# Close forum
+	function close_forum($forum_id) {
+		$conn = db_conn();
+		$query = "update forums set is_open='0' where id='$forum_id'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not close forum at this time.");
+		} else {
+			$conn->close();
+			if ( $result->affected_rows != 0 )
+				return false;
+			else
+				return true;
+		}				
+	}
+	
+	function assign_forum_moderator($params) {
+		# Get id for moderator
+		$user_id = get_user_id($params['forum_moderator']);
+		$forum_id = get_forum_id($params['forum_name']);
+		$query = "insert into forums_moderators (forum_id, user_id) values (forum_id='$forum_id', user_id='$user_id')";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("We can not update club admin at this time. Please try again later.");
+		}
+		$conn->close();
+		return true;
+	}	
+	
+	# Get forum id
+	function get_forum_id($name) {
+		$conn = db_conn();
+		$query = "select id from forums where name='".$name."'";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not identify club.");
+		} else {
+			$conn->close();
+			$row = $result->fetch_assoc();
+			return $row['id'];
+		}
+	}	
 ?>

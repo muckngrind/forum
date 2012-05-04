@@ -107,21 +107,11 @@ insert into clubs values (null, 'Math Club', 'Join us for some PI', 'private', 3
  insert into forums values (null, 2, 'Test Forum 2', 'Testing Test Forum 2', 0);
 
 # Threads
-INSERT INTO 'threads' VALUES (NULL, '1', NULL, 'ROOT Thread 1', 'Thread Root', '1', NULL); # Root
-INSERT INTO 'threads' VALUES (NULL, '1', '1', 'Thread 2', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '1', '1', 'Thread 3', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '1', '1', 'Thread 4', 'Just another thread.', '2', NULL);
-INSERT INTO 'threads' VALUES (NULL, '1', NULL, 'ROOT Thread 5', 'Thread Root', '2', NULL); # Root
-INSERT INTO 'threads' VALUES (NULL, '1', '5', 'Thread 6', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '1', '5', 'Thread 7', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '1', '5', 'Thread 8', 'Just another thread.', '2', NULL);
-INSERT INTO 'threads' VALUES (NULL, '2', NULL, 'ROOT Thread 9', 'Thread Root', '2', NULL); # Root
-INSERT INTO 'threads' VALUES (NULL, '2', '9', 'Thread 10', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '2', '9', 'Thread 11', 'Just another thread.', '2', NULL);
-INSERT INTO 'threads' VALUES (NULL, '2', NULL, 'ROOT Thread 12', 'Thread Root', '2', NULL); # Root
-INSERT INTO 'threads' VALUES (NULL, '2', '12', 'Thread 13', 'Just another thread.', '2', NULL);
-INSERT INTO 'threads' VALUES (NULL, '2', '12', 'Thread 14', 'Just another thread.', '1', NULL);
-INSERT INTO 'threads' VALUES (NULL, '2', '12', 'Thread 15', 'Just another thread.', '2', NULL);
+insert into threads (forum_id, subject, content, user_id) values (1, 'Test Thread', 'I love writing threads.', 1);
+insert into threads (forum_id, subject, content, user_id) values (1, 'Test Thread 2', 'I love writing threads two.', 1);
+insert into threads (forum_id, subject, content, user_id) values (1, 'Test Thread 3', 'I love writing threads three.', 1);
+insert into threads (forum_id, subject, content, user_id) values (1, 'Test Thread 4', 'I love writing threads four.', 1);
+insert into threads (forum_id, subject, content, user_id) values (1, 'Test Thread 5', 'I love writing threads five.', 1);
 
 # Messages
 insert into messages values (null, 1, 2, 'Great party!', 'Hey, thank you for the invite.  I had a great time last night.  Happy Birthday again!', 1, 0, 1, 0, null); # Sent message for 1

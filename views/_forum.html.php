@@ -7,30 +7,71 @@
       <div class="row-fluid">
 				<div class="span12">
         	<div class="row-fluid">  
-						<?php _nav_left(); ?>
+          	<?php _nav_left(); ?>
             <!--/home-content-->
             <div class="span9">
             	<div class="row-fluid">
              	<!--content-description-->
                		<div class="well">
+                  <?php if ( $content['moderator'] == true ) {
+										if ( $content['is_open'] == true ) {										
+										echo "<a class=\"btn btn-warning\" style=\"float:right;\" href=\"".$_SERVER['PHP_SELF']."?request=".$content['forum_id']."&action=close\">Close this Forum</a>";
+										} else {
+										echo "<div class=\"alert alert-error\">Forum is Closed</div>";											
+										}
+									}
+									?>
                     <h2><?php echo $content['heading']; ?></h2>
-                    <h3><?php echo $content['forum']; ?></h3><!--Forum Title-->
-                    <p><?php echo $content['description']; ?><p>
+                    <h3><?php echo $content['name']; ?></h3><!--Forum Title-->
+                    <p><?php echo $content['description'];
+										if ( $content['is_open'] ) {
+											if ( $content['show_reply_form'] ) {
+											?>
+                      </p>
+                      <hr />
+                      <h4>Create a new post</h4>
+                      <form name="create_thread_frm" action="forum.php?request=<?php echo $content['forum_id']; ?>" method="post">
+                        <input type="hidden" name="forum_id" value="<?php echo $content['forum_id']; ?>" />
+                        <label class="admin-label">Subject</label>
+                        <input type="text" class="span5" placeholder="Enter post title" name="subject" id="subject"><br />
+                        <label class="admin-label">Content</label>
+                        <textarea class="span5" name="content" id="content"></textarea><br/>
+                        <br/>
+                        <button type="submit" class="btn btn-info">Post Thread</button>
+                      </form>              
+                      <?php
+											} else {
+											echo "<a class=\"btn btn-primary\" style=\"float:right;\" href=\"".$_SERVER['PHP_SELF']."?request=".$content['forum_id']."&action=add\">Add a Thread</a></p>";	
+											}
+										}
+										?>
                   </div>
                 <!--/content-description-->
               </div><!--/row-->
               <div class="row-fluid">
               	<!--content-pane-->
- 
- 								<!--thread-->
- 									<div class="well thread-head">
-                  	<h4>When is the best time to plant roses?</h4>
-                    <p>Posted by: Ryan on May 12, 2012</p>
+                <?php
+                $result = get_threads($content['forum_id']);
+ 								if ( $result->num_rows > 0 ) {
+									while ( $row = $result->fetch_assoc() ) {
+										?>
+                	<!--thread-->
+										<div class="well thread-head">
+                  	<h4><?php echo $row['subject'];?></h4>
+                    <p>Posted by: <strong><?php echo $row['username']; ?></strong> on <?php echo $row['created_at']; ?></p>
+                    <p class="thread"><?php echo $row['content']; ?></p>               
+                		</div>
+                <!--/thread-->								
+									<?php
+  								}
+								} else { ?>
+									<div class="well thread-head">
+                  	<h4>No threads have been posted to this forum</h4>
                   </div>
-                  <p class="thread">Some interesting info goes here.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dolor tellus, faucibus at ultricies ac, fringilla eu mi. Integer et mauris lorem. Nullam vulputate velit quis tortor eleifend quis mattis dolor blandit. Morbi pharetra pulvinar magna, vel rhoncus nisi volutpat vel. Donec lacinia dignissim dolor, quis semper tellus malesuada et. Fusce a neque a dolor convallis fermentum. Integer scelerisque, dolor nec convallis dignissim, lectus lorem tincidunt massa, sit amet placerat velit ipsum et urna. Vestibulum nec dui est, at mattis erat. Donec consequat luctus orci quis hendrerit. Donec nec rhoncus dui. Mauris risus lacus, lacinia et scelerisque ac, pretium ut sapien. Ut vel nisi nibh. Sed id metus tortor, eu sollicitudin tellus. Nunc tellus nunc, volutpat in facilisis sed, suscipit eu velit. Vestibulum tincidunt mi vel nisi convallis vel tempus nisi rhoncus.
+									<?php
+								}
+								?>
 
-Integer nisi mi, gravida eget sagittis in, imperdiet ut mi. Fusce at mi ac mi dapibus ullamcorper. Mauris eget leo auctor elit tempus convallis sed mattis nulla. Nulla eu sem vel urna fringilla tincidunt. Donec laoreet rutrum dignissim. Mauris id adipiscing mi. In varius tincidunt placerat. Integer in mi at massa lobortis pellentesque. Donec at facilisis mauris.</p>               
-                <!--/thread-->
                 <!--/content-pane-->
               </div><!--/row-->
             </div><!--/span-->

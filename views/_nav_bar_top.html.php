@@ -17,7 +17,7 @@
 							if ( is_signed_in() ) {
 								echo "<li><a href=\"home.php?request=Inbox\">Home</a></li>";
 							}
-							if ( is_super_user() ) {
+							if ( is_admin() ) {
 								echo "<li><a href=\"admin.php\">Control Panel</a></li>";
 							}
 						?>

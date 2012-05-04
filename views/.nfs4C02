@@ -7,7 +7,7 @@
       <div class="row-fluid">
 				<div class="span12">
         	<div class="row-fluid">  
-						
+						<?php _nav_left(); ?>
             <!--/home-content-->
             <div class="span9">
             	<div class="row-fluid">
@@ -15,7 +15,7 @@
                		<h2><?php echo $content['heading']; ?></h2>
                 <!--/content-description-->
               </div><!--/row-->
-              <div class="row-fluid alert alert-info">
+              <div class="row-fluid">
               	<!--content-pane-->
 									<h3>CPSC 431 - Final Project</h3>
                   <h4>Spring 2012</h4>

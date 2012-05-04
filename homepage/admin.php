@@ -5,7 +5,7 @@ require_once(dirname(__FILE__).'/../config/after.php');
 
 session_start();
 # If user is signed in
-if ( is_signed_in() ) {
+if ( is_signed_in() && is_admin() ) {
 	# Check to see which form was submitted and gather parameters
 	if ( isset($_POST['form_type']) ) {
 		$type = trim($_POST['form_type']);
@@ -24,8 +24,8 @@ if ( is_signed_in() ) {
 				
 				case "appoint_club_administrator":
 					$params['club_name'] = trim($_POST['club_name']);
-					appoint_club_administrator($params);
 					$params['club_administrator'] = trim($_POST['club_administrator']);
+					appoint_club_administrator($params);
 					$content['message'] = "Administrator set to ".$params['club_administrator']." for ".$params['club_name'];
 					break;
 					

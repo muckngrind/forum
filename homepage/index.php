@@ -35,10 +35,10 @@ require_once(dirname(__FILE__).'/../config/after.php');
 					header("location: home.php?request=Inbox");
 				}
 			} catch (Exception $e) {
-				$content['error'] = $e;
+				$content['error'] = $e->getMessage();
 				_header();
 				_nav_bar_top();
-				_index($content);
+				_error($content);
 				_footer();				
 			}
 		} else {

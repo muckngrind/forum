@@ -25,7 +25,7 @@
 														$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['sender_id']."</a></td>\n";
+														echo "\t<td class=\"address\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['sender_name']."</a></td>\n";
 														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['subject']."</a></td>\n";
 														echo "\t<td class=\"date\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['created_at']."</a></td>\n";
 													echo "</tr>\n";
@@ -49,7 +49,7 @@
 														$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['recipient_id']."</a></td>\n";
+														echo "\t<td class=\"address\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['recipient_name']."</a></td>\n";
 														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['subject']."</a></td>\n";
 														echo "\t<td class=\"date\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['created_at']."</a></td>\n";
 													echo "</tr>\n";

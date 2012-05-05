@@ -9,7 +9,7 @@
                   <li><a href="home.php?request=Compose">Compose</a></li>
                   <li><a href="home.php?request=Inbox">Inbox</a></li>
                   <li><a href="home.php?request=Sent">Sent</a></li>
-                  <!--<li><a href="home.php?request=Trash">Trash</a></li>-->
+                  <li><a href="home.php?request=Trash">Trash</a></li>
                   <li class="nav-header">My Clubs</li>
                   <?php
 										$results = user_clubs();

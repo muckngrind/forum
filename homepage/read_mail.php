@@ -7,8 +7,9 @@ session_start();
 # If user is signed in
 if ( is_signed_in() ) {
 	# Get id for request message
-	$id = (int) trim($_GET['id']);
+	$id = trim($_GET['id']);
 	$content['request'] = trim($_GET['request']);
+	$content['set'] = trim($_GET['set']);
 	if ( isset($_GET['action']) ) {
 		$action = trim($_GET['action']);
 	}
@@ -25,6 +26,7 @@ if ( is_signed_in() ) {
 		} else {
 			# Else retrieve message
 			$content['message'] = get_message($id);
+			mark_message($content['set'], $id);		
 			_header();
 			_nav_bar_top();
 			_read_mail($content);

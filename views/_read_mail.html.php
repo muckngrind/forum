@@ -35,9 +35,9 @@
                     <div class="row-fluid">
                     	<br/>
 											<?php 
-												if ( strcmp($content['request'], "Sent") != 0 ) { ?>
-											<a class="btn btn-warning" href="read_mail.php?action=delete&id=<?php echo $row['id']."&request=".$content['request'];?>">Delete Message</a> &nbsp;
-												<?php }
+												if ( strcmp($content['request'],'Inbox') == 0 ) { 
+													echo "<a class=\"btn btn-warning\" href=\"read_mail.php?action=delete&id=".$row['id']."&request=".$content['request']."\">Delete Message</a> &nbsp;";
+											  }
 												?>
                         <a class="btn btn-info" href="home.php?request=Inbox">Return to Inbox</a>
                     </div>

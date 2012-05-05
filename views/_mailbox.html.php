@@ -25,9 +25,9 @@
 														$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['sender']."</a></td>\n";
-														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['subject']."</a></td>\n";
-														echo "\t<td class=\"date\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['created_at']."</a></td>\n";
+														echo "\t<td class=\"address\"><a href=\"read_mail.php?request=Inbox&id=".$row['id']."&set=recipient_read\">".$row['sender']."</a></td>\n";
+														echo "\t<td class=\"subject\"><a href=\"read_mail.php?request=Inbox&id=".$row['id']."&set=recipient_read\">".$row['subject']."</a></td>\n";
+														echo "\t<td class=\"date\"><a href=\"read_mail.php?request=Inbox&id=".$row['id']."&set=recipient_read\">".$row['created_at']."</a></td>\n";
 													echo "</tr>\n";
 												}
 												echo "</tbody>\n</table>\n";
@@ -43,10 +43,7 @@
 											<tbody>	
 											<?php																							
 												while ( $row = $mail->fetch_assoc() ) {
-													if ( $row['recipient_read'] == 1 )
-														$class = "new-mail";
-													else
-														$class = "read-mail";
+													$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
 														echo "\t<td class=\"address\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['recipient']."</a></td>\n";
@@ -60,7 +57,6 @@
 											<thead>
 												<tr>
 													<th>Sender</th>
-													<th>Recipient</th>
 													<th>Subject</th>
                           <th>Date</th>
 												</tr>
@@ -68,17 +64,12 @@
 											<tbody>	
 											<?php														
 												while ( $row = $mail->fetch_assoc() ) {
-													if ( $row['recipient_read'] == 1 )
-														$class = "new-mail";
-													else
-														$class = "read-mail";
-														
-													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['sender_id']."</a></td>\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['recipient_id']."</a></td>\n";
-														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['subject']."</a></td>\n";
-														echo "\t<td class=\"date\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['created_at']."</a></td>\n";
-													echo "</tr>\n";
+													$class = "read-mail";
+													echo "<tr>";
+														echo "<td class=\"address\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['sender_id']."</a></td>";
+														echo "<td class=\"subject\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['subject']."</a></td>";
+														echo "<td class=\"date\"><a href=read_mail.php?request=Trash&id=".$row['id'].">".$row['created_at']."</a></td>";
+													echo "</tr>";
 												}
 												echo "</tbody>\n</table>\n";          
 											} else {

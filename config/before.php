@@ -207,7 +207,7 @@ require_once('config.php');
 				$query = "select b.username as recipient, a.id, a.subject, a.content, a.created_at from messages a inner join users b on a.recipient_id = b.id where a.sender_sent = '1' and a.sender_deleted <> '1' and a.sender_id = (select id from users where username='".$_SESSION['username']."')";
 				break;
 			case 'Trash':
-				$query = "select id, recipient_id, sender_id, subject, created_at, recipient_read from messages where sender_id=(select id from users where username='".$_SESSION['username']."') and sender_deleted=1;";
+				$query = "select b.username as sender_id, a.id, a.subject, a.created_at from messages a inner join users b on a.sender_id=b.id where a.recipient_deleted='1' and a.recipient_id=(select id from users where username='".$_SESSION['username']."')";
 				break;
 
 		}
@@ -312,7 +312,7 @@ require_once('config.php');
 	function get_message($id) {
 		# Request message from db
 		# mark_message($mailbox, $id);
-		$query = "select sender_id, recipient_id, subject, content, created_at from messages where id='".$id."'";
+		$query = "select id, sender_id, recipient_id, subject, content, created_at from messages where id='".$id."'";
 		$conn = db_conn();
 		$result = $conn->query($query);
 		
@@ -330,31 +330,44 @@ require_once('config.php');
 	}
 	
 	# Mark message
-	function mark_message($column, $message) {
+	function mark_message($column='none', $message_id) {
 		switch ($column) {
-			case "Inbox":
-				$column = 'recipient_read';
+			case "recipient_read":
+				$query = "update messages set $column='1' where id='$message_id'";
 				break;
+			case "sender_sent":
+				$query = "update messages set $column='1' where id='$message_id'";
+				break;	
+			case "sender_deleted":
+				$query = "update messages set $column='1' where id='$message_id'";
+				break;	
+			case "recipient_deleted":
+				$query = "update messages set $column='1' where id='$message_id'";
+				break;
+			default:
+				$query = "none";
 		}
-		$query = "update messages set $column='1' where id='$message'";
-		$conn = db_conn();
-		$result = $conn->query($query);
-		if ( !$result ) {
-			$conn-close();
-			throw new Exception("Problem updating message.  Please try again later.");
-		} else {
-			return true;
+		if ( strcmp($query, "none") != 0 ) {
+			$conn = db_conn();
+			$result = $conn->query($query);
+			if ( !$result ) {
+				$conn-close();
+				throw new Exception("Problem updating message.  Please try again later.");
+			} else {
+				return true;
+			}
 		}
+		return true;
 	}
 	
 	# Delete message from db
 	function delete_message($id) {
-		$query = "delete from messages where id=$id";
+		$query = "update messages set recipient_deleted='1'";
 		$conn = db_conn();
 		$result = $conn->query($query);
 		
 		if ( !$result ) {
-			$conn-close();
+			$conn->close();
 			throw new Exception("Problem deleting message.  Please try again later.");
 		}
 		
@@ -480,7 +493,6 @@ require_once('config.php');
 	function get_club_list($username) {
 		# Get user id to search for clubs for which user is admin
 		$id = get_user_id($username);
-		echo "$id";
 		$conn = db_conn();
 		$query = "select id, name from clubs where admin='$id'";
 		$result = $conn->query($query);

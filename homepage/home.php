@@ -22,7 +22,7 @@ if ( is_signed_in() ) {
 		$content['error'] = $e;
 		_header();
 		_nav_bar_top();
-		_home($content);
+		_error($content);
 		_footer();		
 	}
 } else {

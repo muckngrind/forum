@@ -47,3 +47,10 @@ div span.read-title {
 	line-height: 3em;
 	border-bottom: #333 1px dotted;
 }
+
+dt {
+	padding-top: 10px;
+}
+dd {
+	padding-bottom: 15px;
+}

@@ -29,6 +29,11 @@
               	<li>User name - modulus</li>
                 <li>Password - testing</li>
               </ul>              
+            	<li>Registered User:</li>
+              <ul>
+              	<li>User name - everyman</li>
+                <li>Password - testing</li>
+              </ul>                            
             </ul>
           </div>
           
@@ -60,7 +65,7 @@
           	<div class="span6">
             	<h3>Not ready to sign up yet?</h3> 
               <div class="well">
-                Check out some of discussions in our public forums.  <a href="#" class="btn btn-info">Public Forums</a>
+                Check out some of discussions in our public clubs.  <a href="directory.php?request=Directory" class="btn btn-info">Public Clubs</a>
               </div>            
             </div><!--/span-->
         	</div><!--/row-->   

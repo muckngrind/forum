@@ -12,10 +12,17 @@ if ( is_signed_in() ) {
 	$content['from'] = trim($_POST['from']);
 	$content['subject'] = trim($_POST['subject']);
 	$content['content'] = trim($_POST['content']);
+	if ( isset($_POST['club_id']) ) {
+		$content['club_id'] = trim($_POST['club_id']);
+	}
 	
 	try {
 		# Send mail
-		send_message($content);
+		if ( strcmp($content['to'],'all') == 0 ) {
+			send_message_club($content); 
+		} else {
+			send_message($content);
+		}
 		_header();
 		_nav_bar_top();
 		_send_mail($content);
@@ -24,7 +31,7 @@ if ( is_signed_in() ) {
 		$content['error'] = $e;
 		_header();
 		_nav_bar_top();
-		_home($content);
+		_error($content);
 		_footer();		
 	}
 } else {

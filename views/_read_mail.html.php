@@ -22,9 +22,9 @@
 									?>
                   <div class="well span8">
                   	<div class="row-fluid">
-                    	<span class="read-title">From:</span><span class="read"> &nbsp;<?php echo $row['sender_id']; ?> </span>
+                    	<span class="read-title">From:</span><span class="read"> &nbsp;<?php echo get_username($row['sender_id']); ?> </span>
                       <span style="float:right; color:#666">Date: <?php echo $row['created_at']; ?> </span><br/>
-                      <span class="read-title">To:</span><span class="read"> &nbsp;<?php echo $row['recipient_id']; ?> </span>  
+                      <span class="read-title">To:</span><span class="read"> &nbsp;<?php echo get_username($row['recipient_id']); ?> </span>  
                     </div>
                     <div class="row-fluid">
                     	<span class="read-title">Subject:</span><span class="read"> &nbsp;<?php echo $row['subject']; ?></span>

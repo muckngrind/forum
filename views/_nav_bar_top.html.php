@@ -21,7 +21,7 @@
 								echo "<li><a href=\"admin.php\">Control Panel</a></li>";
 							}
 						?>
-              <li><a href="about.php">About</a></li>
+              <li><a href="about.php">Functional Requirements</a></li>
             </ul>
             <p class="navbar-text pull-right">
 						<?php 

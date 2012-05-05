@@ -19,13 +19,13 @@
 											<tbody>	
 											<?php											
 												while ( $row = $mail->fetch_assoc() ) {
-													if ( $row['recipient_read'] == 1 )
+													if ( $row['recipient_read'] == 0 )
 														$class = "new-mail";
 													else
 														$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['sender_name']."</a></td>\n";
+														echo "\t<td class=\"address\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['sender']."</a></td>\n";
 														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['subject']."</a></td>\n";
 														echo "\t<td class=\"date\"><a href=read_mail.php?request=Inbox&id=".$row['id'].">".$row['created_at']."</a></td>\n";
 													echo "</tr>\n";
@@ -49,7 +49,7 @@
 														$class = "read-mail";
 														
 													echo "<tr class=\"$class\">\n";
-														echo "\t<td class=\"address\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['recipient_name']."</a></td>\n";
+														echo "\t<td class=\"address\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['recipient']."</a></td>\n";
 														echo "\t<td class=\"subject\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['subject']."</a></td>\n";
 														echo "\t<td class=\"date\"><a href=read_mail.php?request=Sent&id=".$row['id'].">".$row['created_at']."</a></td>\n";
 													echo "</tr>\n";
@@ -82,21 +82,9 @@
 												}
 												echo "</tbody>\n</table>\n";          
 											} else {
-												?>
-                        <div class="well">
-												<form action="send_mail.php?request=Inbox" method="post" name="compose" id="compose">
-													<label>Recipient</label>
-													<input class="span7" type="text" name="to"><br/>
-													<label>Subject</label>
-													<input class="span7" type="text" name="subject"><br/>
-                          <label>Message</label>																							
-                          <textarea class="span7" name="content" id="content"></textarea><br/>
-                          <input type="hidden" name="from" value="<?php echo $_SESSION['username']?>" />
-                          <input class="btn btn-info" type="submit" value="Send" />
-												</form>
-                        </div>
-                        <br />
-                        <?php
+												echo "<div class=\"well\">";
+												render_compose_mail();
+												echo "</div><br/>";
 											}
 										?>
       

@@ -1,5 +1,36 @@
-Views have been completed
-Sign up, sign in and sign out are completed
-TODO: Need to work on proper redirect to user home page after sign in
-TODO: Need to display username rather than user id when reading mail
-TODO: Build the forum!!!
+TODO: Create views for each page - completed, RL
+
+Functional Requirements
+#######################
+
+Administrator
+TODO: Create new clubs
+TODO: Appoint club administrators
+TODO: Ban users
+
+Club administrators
+TODO: Edit club profile - completed, RL
+TODO: Create/close forums - completed, RL
+TODO: Assign forum moderators - completed, RL
+TODO: Approve club members
+TODO: Remove club members - completed, RL
+TODO: Send messages to all club members - completed, RL
+
+Forum moderators
+TODO: Close threads - completed, RL
+TODO: Remove posts - completed, RL
+
+Club members
+TODO: Create threads - completed, RL
+TODO: Invite users to join a club
+
+Registered users
+TODO: Login with a registered username and password - completed, RL
+TODO: Change password - completed, RL
+TODO: Post to the forums - completed, R - completed, RLL
+TODO: Send internal messages - completed, RL
+TODO: Join a club
+
+The public
+TODO: View clubs and forums - completed, RL
+TODO: Register to become a user - completed, RL

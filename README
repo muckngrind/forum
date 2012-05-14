@@ -4,9 +4,9 @@ Functional Requirements
 #######################
 
 Administrator
-TODO: Create new clubs
-TODO: Appoint club administrators
-TODO: Ban users
+TODO: Create new clubs - completed, RL
+TODO: Appoint club administrators - completed, RL
+TODO: Ban users - completed, RL
 
 Club administrators
 TODO: Edit club profile - completed, RL
@@ -22,14 +22,14 @@ TODO: Remove posts - completed, RL
 
 Club members
 TODO: Create threads - completed, RL
-TODO: Invite users to join a club
+TODO: Invite users to join a club - completed, RL
 
 Registered users
 TODO: Login with a registered username and password - completed, RL
 TODO: Change password - completed, RL
-TODO: Post to the forums - completed, R - completed, RLL
+TODO: Post to the forums - completed, RL
 TODO: Send internal messages - completed, RL
-TODO: Join a club
+TODO: Join a club - completed, RL
 
 The public
 TODO: View clubs and forums - completed, RL

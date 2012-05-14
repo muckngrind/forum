@@ -26,7 +26,7 @@
                 <div class="well">
                   <h4>Create new clubs</h4>
                   <hr />
-                  <form name="create_club_frm" action="admin.php" method="post">
+                  <form enctype="multipart/form-data" name="create_club_frm" action="admin.php" method="post">
                   	<input type="hidden" name="form_type" value="create_club" />
                     <label class="admin-label">Official Club Name</label>
                     <input type="text" class="span5" placeholder="Name goes here" name="club_name" id="clubName"><br/>
@@ -34,6 +34,9 @@
                     <textarea class="span5" name="club_description" id="clubDescription"></textarea><br/>
                     <label class="admin-label">Club Administrator</label>
                     <input type="text" class="span5" placeholder="Administratror" name="club_administrator" id="clubAdministator"><br/>
+                    <input name="max_size" value="102400" type="hidden">
+										<label class="admin-label">Club Photo</label>
+                    <input class="admin-label" name="image" accept="image/jpeg" type="file">
                     <label class="admin-label">Club Type</label>
                     <input type="radio" name="club_type" value="public"><span class="help-inline">Public</span> &nbsp; 
                     <input type="radio" name="club_type" value="private"><span class="help-inline">Private</span> &nbsp;

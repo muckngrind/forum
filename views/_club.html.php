@@ -20,9 +20,17 @@
                 <div class="span4">
                   <ul class="thumbnails">
                     <li class="span3">
+                    <!--
                       <div class="thumbnail">
+                      <?php
+												//header('Content-type: image/jpg');
+												//$result = get_club_image($content['request']);
+												//$row = $result->fetch_assoc();																
+     										//echo $row['image'];
+											?>
                         <img src="http://placehold.it/260x180" alt="">
                       </div>
+                      -->
                     </li>
                   </ul>
                 </div><!--/span-->
@@ -89,7 +97,19 @@
 									echo "No active forums are available at this time.";
 								}
 								?>
-                </div>                  
+                </div>
+                <!-- Invite a friend -->
+                	<p><strong>Want to invite a member?</strong><br/>
+                      <form class="well form-inline" id="invite_a_member" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                        <input type="hidden" name="form_type" value="member_invitation" />
+                        <input type="hidden" name="request" value="<?php echo $content['club_id']; ?>" />
+                        <input type="hidden" name="subject" value="Membership Request">
+                        <input type="hidden" name="sender" value="<?php echo $_SESSION['username']; ?>">
+                        <label>Recipient</label>
+      									<input class="span2" type="text" name="recipient"><br/><br/>
+                        <input type="hidden" name="message" value="Please join our club! - <?php echo $content['club_name']; ?>">
+                        <button type="submit" class="btn btn-info">Send membership invitation</button>
+                      </form>                                  
 									<h3>Club Administrator Tasks</h3>
                 <div class="alert">
                  <h4>Edit club profile</h4>
@@ -145,9 +165,12 @@
                     <input type="hidden" name="request" value="<?php echo $content['club_id']; ?>" />
                     <label class="admin-label">Membership Requests</label>
                     <?php
-											$result = get_member_requests($content['club_id']);
+											$admin_id = get_user_id($_SESSION['username']);
+											$result = get_member_requests($admin_id);
 											while ( $row = $result->fetch_assoc() ) {
-												echo "<input type=\"checkbox\" name=".$row['id']." id=\"username\"> ".$row['username']."<br/>";
+												$name = get_username($row['sender_id']);
+												echo "<input type=\"checkbox\" name=\"sender_ids[]\" value=".$row['sender_id']." id=\"username\"> ".$name."<br/>";
+												echo "<input type=\"hidden\" name=\"message_ids[]\" value=".$row['id']." />";
 											}
 										?>
                     <br />

@@ -308,6 +308,25 @@ require_once('config.php');
 		return true;
 	}		
 	
+	function invite_member($message) {
+		# get club admin id
+		$to = get_user_id($message['recipient']);
+		$from = get_user_id($message['sender']);
+		$subject = $message['subject'];
+		$content = $message['message'];
+		$member_request = $message['request'];
+			
+		$conn = db_conn();
+		$compose = "insert into messages (sender_id, recipient_id, subject, content, sender_sent, member_invite) values ('$from', '$to', '$subject', '$content', 1, 1);";
+		$result = $conn->query($compose);	
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Problem sending request. Please try again later.");	
+		}
+		$conn->close();
+		return true;
+	}			
+	
 	# Retrieve message
 	function get_message($id) {
 		# Request message from db
@@ -423,10 +442,32 @@ require_once('config.php');
 		}		
 	}
 	
+	function get_club_image($id) {
+		$query = "select image from clubs where id='".$id."'";
+		$conn = db_conn();
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("could not retrieve image");
+		}
+		$conn->close();
+		return true;		
+	}
+	
 	function create_club($params) {
+		if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) { 
+  		// Temporary file name stored on the server
+      $tmpName  = $_FILES['image']['tmp_name'];  
+      // Read the file 
+      $fp = fopen($tmpName, 'r');
+      $data = fread($fp, filesize($tmpName));
+      $data = addslashes($data);
+      fclose($fp);		
+		}
+				
 		# Get id for administrator
 		$id = get_user_id($params['club_administrator']);
-		$query = "insert into clubs values (null, '".$params['club_name']."', '".$params['club_description']."', '".$params['club_type']."', '".$id."');";
+		$query = "insert into clubs values (null, '".$params['club_name']."', '".$params['club_description']."', '".$params['club_type']."', '".$id."', '".$data."');";
 		$conn = db_conn();
 		$result = $conn->query($query);
 		if ( !$result ) {
@@ -752,9 +793,10 @@ require_once('config.php');
 	}
 	
 	# Retrieve members requesting membership
-	function get_member_requests($club_id) {
+	function get_member_requests($admin_id) {
+		$admin_id = get_user_id($_SESSION['username']);
 		$conn = db_conn();
-		$query = "select a.user_id, b.username from clubs_users a inner join users b on a.user_id = b.id where a.club_id = $club_id";
+		$query = "select a.id, a.sender_id from messages a inner join clubs b on b.admin = a.recipient_id where a.recipient_id = '".$admin_id."' and a.member_request = '1'";
 		$result = $conn->query($query);
 		if ( !$result ) {
 			$conn->close();
@@ -835,13 +877,54 @@ require_once('config.php');
 		$result = $conn->query($query);
 		if ( !$result ) {
 			$conn->close();
-			throw new Exception("Could join user to club at this time.");
+			throw new Exception("Could not join user to club at this time.");
 		} else {
 			if ( $result->affected_rows == 1 ) {
 				return true;
 			} else {
 				return false;
 			}
+		}
+	}
+	
+	# Confirm user membership
+	function add_member($params) {
+		$ct = sizeof($params['sender_ids']);
+		for ( $i = 0; $i < $ct; $i++ ) {
+			join_club_multi($params['club_id'], $params['sender_ids'][$i]);
+			update_member_message($params['message_ids'][$i], "member_request");
+		}
+	}
+	
+	# Add user to clubs_users
+	function join_club_multi($id, $club_id) {
+		echo $club_id." ".$id;
+		$id = trim($id);
+		$club_id = trim($club_id);
+		$conn = db_conn();
+		$query = "insert into clubs_users values ('$club_id', '$id')";
+		$result = $conn->query($query);
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not join user to club at this time.");
+		} else {
+			if ( $result->affected_rows == 1 ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}	
+	
+	# Change message queue
+	function update_member_message($id, $field) {
+		$conn = db_conn();
+		$result = $conn->query("update messages set $field='0' where id='$id");
+		if ( !$result ) {
+			$conn->close();
+			throw new Exception("Could not reset password.  Please try again later.");	
+		} else {
+			return true;
 		}
 	}
 ?>

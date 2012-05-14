@@ -40,7 +40,9 @@
           <div class="row-fluid">
           	<div class="span6">
              	<h2>Want to Join? <strong>Sign up</strong></h2>
+              
               <p>
+              <strong>Enter your Full Name, Username and Password</strong>
                 <form class="well form-inline" id="user_sign_up" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                   <input type="text" class="input-small" placeholder="Full Name" name="full_name">
                   <input type="text" class="input-small" placeholder="User Name" name="username">
@@ -52,6 +54,7 @@
           	<div class="span6">            
               <h2>Existing Member? <strong>Sign in</strong></h2>            
               <p>
+              <strong>Enter your Username and Password</strong>
                 <form class="well form-inline" id="user_sign_in" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                   <input type="text" class="input-small" placeholder="User Name" name="username">
                   <input type="password" class="input-small" placeholder="Password" name="password">

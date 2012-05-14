@@ -24,21 +24,6 @@
                   <li class="nav-header">Club Directory</li>
                   <li><a href="directory.php?request=Directory">View all clubs</a></li>
                 </ul>
-                <hr>
-                <h2 class="club-search">Search for Clubs</h2>
-                <form method= "post" class="form-search" style="padding-left:15px;">
-  								<input type="text" class="input-medium search-query" name= 'Search'>
-  								<button type="submit" class="btn">Search</button>
-								</form>
-		<?php
-		#	$club= $_POST['Search'];
-		#	$results = search_club($club);
-
-
-
-
-		#?>
-
               </div><!--/.well -->
             </div><!--/span-->
             <!--/nav-left-->

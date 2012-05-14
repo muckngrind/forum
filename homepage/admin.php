@@ -18,6 +18,7 @@ if ( is_signed_in() && is_admin() ) {
 					$params['club_description'] = trim($_POST['club_description']);
 					$params['club_type'] = trim($_POST['club_type']);
 					$params['club_administrator'] = trim($_POST['club_administrator']);
+					$params['max_size'] = $_POST['max_size'];
 					create_club($params);
 					$content['message'] = "Club ".$params['club_name']." created.";
 					break;

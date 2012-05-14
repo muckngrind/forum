@@ -62,6 +62,24 @@ if ( is_signed_in() || is_public($_GET['request']) ) {
 						$params['message'] = $_POST['message'];
 						request_membership($params);
 						$content['message'] = "Membership request successfully sent.";					
+						break;
+						
+					case "member_invitation":
+						$params['club_id'] = trim($_POST['request']);
+						$params['subject'] = $_POST['subject'];
+						$params['sender'] = $_POST['sender'];
+						$params['recipient'] = $_POST['recipient'];
+						$params['message'] = $_POST['message'];
+						invite_member($params);
+						$content['message'] = "Membership request successfully sent.";					
+						break;
+						
+					case "approve_club_members":
+						$params['club_id'] = trim($_POST['request']);
+						$params['sender_ids'] = $_POST['sender_ids'];
+						$params['message_ids'] = $_POST['message_ids'];
+						add_member($params);
+						$content['message'] = "Users added to club roster.";					
 						break;						
 				}
 			}
@@ -80,7 +98,7 @@ if ( is_signed_in() || is_public($_GET['request']) ) {
 			_club($content);
 			_footer();
 		} catch (Exception $e) {
-			$content['error'] = $e->getMessage();
+			$content['error'] = $e->error_list; //->getMessage();
 			_header();
 			_nav_bar_top();
 			_error($content);

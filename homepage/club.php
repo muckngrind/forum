@@ -98,7 +98,7 @@ if ( is_signed_in() || is_public($_GET['request']) ) {
 			_club($content);
 			_footer();
 		} catch (Exception $e) {
-			$content['error'] = $e->error_list; //->getMessage();
+			$content['error'] = $e->getMessage();
 			_header();
 			_nav_bar_top();
 			_error($content);

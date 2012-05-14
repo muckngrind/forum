@@ -891,22 +891,21 @@ require_once('config.php');
 	function add_member($params) {
 		$ct = sizeof($params['sender_ids']);
 		for ( $i = 0; $i < $ct; $i++ ) {
-			join_club_multi($params['club_id'], $params['sender_ids'][$i]);
-			update_member_message($params['message_ids'][$i], "member_request");
+			join_club_multi($params['sender_ids'][$i], $params['club_id']);
+			update_member_message($params['message_ids'][$i]);
 		}
 	}
 	
 	# Add user to clubs_users
 	function join_club_multi($id, $club_id) {
-		echo $club_id." ".$id;
 		$id = trim($id);
 		$club_id = trim($club_id);
 		$conn = db_conn();
-		$query = "insert into clubs_users values ('$club_id', '$id')";
+		$query = "insert into clubs_users values ('".$club_id."', '".$id."')";
 		$result = $conn->query($query);
 		if ( !$result ) {
 			$conn->close();
-			throw new Exception("Could not join user to club at this time.");
+			throw new Exception("Could save user to club at this time.");
 		} else {
 			if ( $result->affected_rows == 1 ) {
 				return true;
@@ -917,12 +916,12 @@ require_once('config.php');
 	}	
 	
 	# Change message queue
-	function update_member_message($id, $field) {
+	function update_member_message($id) {
 		$conn = db_conn();
-		$result = $conn->query("update messages set $field='0' where id='$id");
+		$result = $conn->query("update messages set member_request='0' where id='$id'");
 		if ( !$result ) {
 			$conn->close();
-			throw new Exception("Could not reset password.  Please try again later.");	
+			throw new Exception("Could not update member message.");	
 		} else {
 			return true;
 		}
